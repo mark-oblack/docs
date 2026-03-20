@@ -2,15 +2,15 @@
 title: "Staff API Flow"
 ---
 
-This API flow describes how kitchen staff view, manage, and prepare an order.
+This API flow describes how kitchen staff view, manage, and prepare an order placed by a patron.
 
 ## 1. Display the order
 
-After the patron places an order, the order displays on the expeditor's KDS. Only new orders should display on the KDS.
+After the patron places an order, the order displays on the expeditor's KDS. The KDS should display only new orders.
 
 ### Request
 
-The client sends an HTTP request to retrieve orders with a status of "Received" and that were placed on the current day. The request also retrieves specific details about the order, including the table number, status, priority, and IDs of each dish included in the order.
+The client sends an HTTP request to retrieve orders with a status of "Received" and that were placed on the current day. The request also retrieves details about the order, including the table number, status, priority, and IDs of each dish included in the order.
 
 ```shellscript wrap
 curl -L -X GET '{baseUrl}/orders?fields=table_number%7Cstatus%7Cpriority%7Cdish_ids&filter=status.eq~Received%7Ccreated_at.gte~2026-03-20' \
@@ -54,7 +54,7 @@ If the request was successful, the server responds with a `200 OK` status code w
 
 ## 2. Prioritize the order
 
-The expeditor can adjust the priority of the order (from 1 to 5).
+If needed, the expeditor can adjust the priority of the order (from 1 to 5).
 
 ### Request
 
@@ -98,7 +98,7 @@ If the request was successful, the server responds with a `200 OK` status code w
 
 ## 3. Start preparation
 
-After prioritizing the order, the expeditor can start preparing the order and change its status to "In Progress".
+After prioritizing the order, the expeditor starts preparing the order and changes its status to "In Progress".
 
 ### Request
 
@@ -142,11 +142,11 @@ If the request was successful, the server responds with a `200 OK` status code w
 
 ## 4. Prepare order at each station
 
-Each dish in the order is assigned to a specific station (e.g., cold, hot, beverages). Stations responsible for each dish see their respective parts of the order on their KDS.
+Each dish in the order is assigned to a specific station (e.g., cold, hot, beverages). Each station's KDS displays the parts of the order that the station is responsible for.
 
 ### Request
 
-The client sends an HTTP request to retrieve only dishes belonging to a specific station ("cold" in this example).
+The client sends an HTTP request to retrieve dishes assigned to a specific station `cold` in this example).
 
 ```shellscript wrap
 curl -L -X GET '{baseUrl}/orders/{orderId}/dishes?fields=name%7Cstation%7Cingredients&filter=station.eq~cold' \
@@ -155,7 +155,13 @@ curl -L -X GET '{baseUrl}/orders/{orderId}/dishes?fields=name%7Cstation%7Cingred
 
 ### Response
 
-If the request was successful, the server responds with a `200 OK` status code with the response body containing the dishes included in the order that belong to the specified station. The client will store each dish ID in local storage for later use.
+If the request was successful, the server responds with a `200 OK` status code with the response body containing the dishes that belong to the specified station.
+
+<Note>
+  Note
+
+  The client stores each dish ID in local storage for use in the next step.
+</Note>
 
 ```json
 {
@@ -189,7 +195,7 @@ If the request was successful, the server responds with a `200 OK` status code w
 
 ## 5. Display dish ingredients
 
-When the staff begins preparing dishes at their station, they need to know each dish's ingredients.
+Before the staff begins preparing dishes at their station, they need to know each dish's ingredients.
 
 ### Request
 
@@ -226,7 +232,7 @@ If the request was successful, the server responds with a `200 OK` status code w
 
 ## 6. Mark order as "Ready for Assembly"
 
-After a station completes preparation of their part of the order, they mark it as "Ready for Assembly" on their KDS. Once all stations have marked their parts of the order as "Ready for Assembly", the expeditor is notified.
+After a station finishes preparing their part of the order, they mark it as "Ready for Assembly" on their KDS. Once all stations have marked their parts of the order as "Ready for Assembly", the expeditor is notified.
 
 ## 7. Assemble order
 

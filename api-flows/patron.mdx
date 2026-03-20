@@ -2,15 +2,15 @@
 title: "Patron API Flow"
 ---
 
-This API flow describes how a user browses a restaurant menu and places an order for a specific dish.
+This API flow describes how a patron browses a restaurant menu and places an order.
 
 ## 1. Browse the menu
 
-The patron uses the food ordering app to browse the menu and view dishes belonging to specific categories (e.g., Appetizer, Main Course, Dessert, Drinks(.
+The patron uses the food ordering app to browse the menu and view dishes belonging to specific categories (e.g., Appetizer, Main Course, Dessert, Drinks).
 
 ### Request
 
-The client sends an HTTP request to retrieve dishes belonging to a specific category ("Appetizer" in this example).
+The client sends an HTTP request to retrieve dishes belonging to a specific category `Appetizer` in this example).
 
 ```shellscript
 curl -L -X GET '{baseUrl}/dishes?filter=category.eq~Appetizer' \
@@ -104,7 +104,7 @@ If the request was successful, the server responds with a `200 OK` status code w
 
 ## 2. Check ingredient quantities
 
-Before displaying available dishes in the UI, the client app must check ingredient inventory. If a dish has essential ingredients whose inventory is greater than zero, it will display in the UI as available for selection.
+Before displaying available dishes to the patron, the client app checks ingredient inventory. If a dish has essential ingredients whose inventory is zero, the dish will not be displayed as available for selection in the UI.
 
 ### Request
 
@@ -171,17 +171,21 @@ If the request was successful, the server responds with a `200 OK` status code w
 
 ## 4. Add dishes to order
 
-If the user likes the dish they selected, they can add it to their order. The client keeps track of each dish the user adds to their order.
+If the patron likes the dish they selected, they can add it to their order. The client keeps track of each dish the patron adds to their order.
 
-When the user views their bill, the client can retrieve each dish's details from local storage.
+<Note>
+  Note
+
+  When the patron views their bill, the client can retrieve details about each dish included in the order from local storage.
+</Note>
 
 ## 5. Placing an order
 
-After the user selects all dishes they want to order, they place the order.
+After the patron selects all dishes they want to order, they place their order.
 
 ### Request
 
-The client sends an HTTP request to create an order, retrieving the dishes that the user selected from located storage and including them in the request body.
+The client sends an HTTP request to create an order, retrieving the dishes that the patron selected from located storage and including them in the request body.
 
 ```shellscript wrap
 curl -L -X POST '{baseUrl}/orders' \
@@ -221,4 +225,4 @@ If the request was successful, the server responds with a `201 CREATED` status c
 
 ## 6. Receive order confirmation
 
-After the user places an order, the patron receives confirmation and the order details are sent to the restaurant staff to begin preparing the order.
+After the patron places an order, they receive confirmation and the order details are sent to the restaurant staff to begin preparing the order.
