@@ -1,0 +1,326 @@
+---
+title: "Patron API Flow"
+---
+
+Description of API Flow.
+
+## 1. Browse the menu
+
+### Request
+
+The client sends an HTTP request to retrieve dishes belonging to a specific category (e.g., Appetizer).
+
+```shellscript
+curl --location '{baseUrl}/dishes?filter=category.eq~Appetizer' \
+--header 'Accept: application/json'
+```
+
+### Response
+
+If the request was successful, the server responds with a `200 OK` status code with the response body containing the list of dishes that belong to the specified category.
+
+```json expandable
+{
+    "results": [
+        {
+            "id": "698b8810a91dc520146ece94",
+            "created_at": "2026-01-11T05:18:06.112Z",
+            "updated_at": "2026-02-09T19:59:48.688Z",
+            "name": "Bruschetta al Pomodoro",
+            "description": "Toasted bread topped with a mixture of ripe tomatoes, garlic, basil, and olive oil.",
+            "category": "Appetizer",
+            "preparation_time": 55,
+            "price": 499,
+            "image_name": "bruschetta_al_pomodoro",
+            "station": "cold",
+            "ingredients": [
+                {
+                    "ingredient_id": "698b8810a91dc520146ece6c",
+                    "is_essential": false,
+                    "_id": "698b8810a91dc520146ece95"
+                },
+                {
+                    "ingredient_id": "698b8810a91dc520146ece70",
+                    "is_essential": true,
+                    "_id": "698b8810a91dc520146ece96"
+                },
+                {
+                    "ingredient_id": "698b8810a91dc520146ece88",
+                    "is_essential": false,
+                    "_id": "698b8810a91dc520146ece97"
+                }
+            ]
+        },
+        {
+            "id": "698b8810a91dc520146ece98",
+            "created_at": "2026-02-06T21:48:36.521Z",
+            "updated_at": "2026-02-10T13:06:58.076Z",
+            "name": "Arancini di Riso",
+            "description": "Crispy, golden rice balls stuffed with a cheesy filling and served with marinara sauce.",
+            "category": "Appetizer",
+            "preparation_time": 20,
+            "price": 1999,
+            "image_name": "arancini_di_riso",
+            "station": "hot",
+            "ingredients": [
+                {
+                    "ingredient_id": "698b8810a91dc520146ece87",
+                    "is_essential": false,
+                    "_id": "698b8810a91dc520146ece99"
+                },
+                {
+                    "ingredient_id": "698b8810a91dc520146ece8b",
+                    "is_essential": true,
+                    "_id": "698b8810a91dc520146ece9a"
+                },
+                {
+                    "ingredient_id": "698b8810a91dc520146ece75",
+                    "is_essential": true,
+                    "_id": "698b8810a91dc520146ece9b"
+                },
+                {
+                    "ingredient_id": "698b8810a91dc520146ece8a",
+                    "is_essential": true,
+                    "_id": "698b8810a91dc520146ece9c"
+                },
+                {
+                    "ingredient_id": "698b8810a91dc520146ece78",
+                    "is_essential": true,
+                    "_id": "698b8810a91dc520146ece9d"
+                },
+                {
+                    "ingredient_id": "698b8810a91dc520146ece61",
+                    "is_essential": false,
+                    "_id": "698b8810a91dc520146ece9e"
+                }
+            ]
+        },
+        {
+            "id": "698b8810a91dc520146ece9f",
+            "created_at": "2025-02-18T03:34:36.136Z",
+            "updated_at": "2026-02-10T02:04:58.209Z",
+            "name": "Caprese Salad",
+            "description": "A fresh salad featuring ripe tomatoes, mozzarella cheese, basil, and a drizzle of balsamic vinegar.",
+            "category": "Appetizer",
+            "preparation_time": 55,
+            "price": 199,
+            "image_name": "caprese_salad",
+            "station": "cold",
+            "ingredients": [
+                {
+                    "ingredient_id": "698b8810a91dc520146ece8e",
+                    "is_essential": true,
+                    "_id": "698b8810a91dc520146ecea0"
+                },
+                {
+                    "ingredient_id": "698b8810a91dc520146ece7d",
+                    "is_essential": false,
+                    "_id": "698b8810a91dc520146ecea1"
+                },
+                {
+                    "ingredient_id": "698b8810a91dc520146ece6c",
+                    "is_essential": true,
+                    "_id": "698b8810a91dc520146ecea2"
+                },
+                {
+                    "ingredient_id": "698b8810a91dc520146ece87",
+                    "is_essential": false,
+                    "_id": "698b8810a91dc520146ecea3"
+                },
+                {
+                    "ingredient_id": "698b8810a91dc520146ece78",
+                    "is_essential": true,
+                    "_id": "698b8810a91dc520146ecea4"
+                },
+                {
+                    "ingredient_id": "698b8810a91dc520146ece82",
+                    "is_essential": false,
+                    "_id": "698b8810a91dc520146ecea5"
+                }
+            ]
+        },
+        {
+            "id": "698b8810a91dc520146ecea6",
+            "created_at": "2025-05-08T11:32:58.947Z",
+            "updated_at": "2026-02-10T11:10:32.680Z",
+            "name": "Prosciutto e Melone",
+            "description": "Thin slices of cured ham served with sweet cantaloupe melon.",
+            "category": "Appetizer",
+            "preparation_time": 5,
+            "price": 4999,
+            "image_name": "prosciutto_e_melone",
+            "station": "cold",
+            "ingredients": [
+                {
+                    "ingredient_id": "698b8810a91dc520146ece79",
+                    "is_essential": true,
+                    "_id": "698b8810a91dc520146ecea7"
+                },
+                {
+                    "ingredient_id": "698b8810a91dc520146ece66",
+                    "is_essential": false,
+                    "_id": "698b8810a91dc520146ecea8"
+                },
+                {
+                    "ingredient_id": "698b8810a91dc520146ece63",
+                    "is_essential": true,
+                    "_id": "698b8810a91dc520146ecea9"
+                },
+                {
+                    "ingredient_id": "698b8810a91dc520146ece8a",
+                    "is_essential": true,
+                    "_id": "698b8810a91dc520146eceaa"
+                },
+                {
+                    "ingredient_id": "698b8810a91dc520146ece83",
+                    "is_essential": true,
+                    "_id": "698b8810a91dc520146eceab"
+                },
+                {
+                    "ingredient_id": "698b8810a91dc520146ece76",
+                    "is_essential": false,
+                    "_id": "698b8810a91dc520146eceac"
+                }
+            ]
+        },
+        {
+            "id": "698b8810a91dc520146ecead",
+            "created_at": "2025-03-03T19:01:06.296Z",
+            "updated_at": "2026-02-10T09:22:00.585Z",
+            "name": "Calamari Fritti",
+            "description": "Fried squid rings served with a side of marinara sauce or lemon wedges.",
+            "category": "Appetizer",
+            "preparation_time": 50,
+            "price": 3999,
+            "image_name": "calamari_fritti",
+            "station": "hot",
+            "ingredients": [
+                {
+                    "ingredient_id": "698b8810a91dc520146ece74",
+                    "is_essential": true,
+                    "_id": "698b8810a91dc520146eceae"
+                },
+                {
+                    "ingredient_id": "698b8810a91dc520146ece72",
+                    "is_essential": true,
+                    "_id": "698b8810a91dc520146eceaf"
+                },
+                {
+                    "ingredient_id": "698b8810a91dc520146ece8d",
+                    "is_essential": false,
+                    "_id": "698b8810a91dc520146eceb0"
+                },
+                {
+                    "ingredient_id": "698b8810a91dc520146ece8a",
+                    "is_essential": false,
+                    "_id": "698b8810a91dc520146eceb1"
+                }
+            ]
+        },
+        {
+            "id": "698b8810a91dc520146eceb2",
+            "created_at": "2025-12-21T04:48:42.648Z",
+            "updated_at": "2026-02-10T01:41:42.989Z",
+            "name": "Carpaccio di Manzo",
+            "description": "Thinly sliced raw beef topped with arugula, Parmesan, and a drizzle of olive oil.",
+            "category": "Appetizer",
+            "preparation_time": 30,
+            "price": 1999,
+            "image_name": "carpaccio_di_manzo",
+            "station": "cold",
+            "ingredients": [
+                {
+                    "ingredient_id": "698b8810a91dc520146ece8a",
+                    "is_essential": true,
+                    "_id": "698b8810a91dc520146eceb3"
+                },
+                {
+                    "ingredient_id": "698b8810a91dc520146ece87",
+                    "is_essential": false,
+                    "_id": "698b8810a91dc520146eceb4"
+                },
+                {
+                    "ingredient_id": "698b8810a91dc520146ece60",
+                    "is_essential": true,
+                    "_id": "698b8810a91dc520146eceb5"
+                }
+            ]
+        },
+        {
+            "id": "698b8810a91dc520146eceb6",
+            "created_at": "2025-03-02T18:03:29.140Z",
+            "updated_at": "2026-02-10T14:29:45.869Z",
+            "name": "Crostini di Fegato",
+            "description": "Toasted bread slices topped with a savory chicken liver pâté.",
+            "category": "Appetizer",
+            "preparation_time": 35,
+            "price": 899,
+            "image_name": "crostini_di_fegato",
+            "station": "cold",
+            "ingredients": [
+                {
+                    "ingredient_id": "698b8810a91dc520146ece8a",
+                    "is_essential": false,
+                    "_id": "698b8810a91dc520146eceb7"
+                },
+                {
+                    "ingredient_id": "698b8810a91dc520146ece7f",
+                    "is_essential": true,
+                    "_id": "698b8810a91dc520146eceb8"
+                }
+            ]
+        }
+    ],
+    "total_results": 7
+}
+```
+
+## 2. Check ingredient quantities
+
+### Request
+
+See previous example.
+
+### Response
+
+See previous example.
+
+## 3. View dish details
+
+### Request
+
+See previous example.
+
+### Response
+
+See previous example.
+
+## 4. Add dishes and view the cart
+
+### Request
+
+See previous example.
+
+### Response
+
+See previous example.
+
+## 5. Placing an order
+
+### Request
+
+See previous example.
+
+### Response
+
+See previous example.
+
+## 6. Receive order confirmation
+
+### Request
+
+See previous example.
+
+### Response
+
+See previous example.
