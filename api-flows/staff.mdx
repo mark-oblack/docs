@@ -2,24 +2,278 @@
 title: "Staff API Flow"
 ---
 
-Description of API Flow.
+This API flow describes how...
 
-## 1. Step 1 Title
+## 1. Display the order
 
-### Request
-
-The client sends an HTTP request to `{describe the purpose of the API request}`.
-
-### Response
-
-If the request was successful, the server responds with a `{insert status code}` status code with the response body containing `{describe the important fields of the response}`.
-
-## 2. Step 2 Title
+After the patron places an order, the order displays on the expeditor's KDS. Only new orders should display on the KDS.
 
 ### Request
 
-See previous example.
+The client sends an HTTP request to retrieve orders with a status of "Received" and that were placed on the current day. The request also retrieves specific details about the order, including the table number, status, priority, and IDs of each dish included in the order.
+
+```shellscript wrap
+curl -L -X GET '{baseUrl}/orders?fields=table_number%7Cstatus%7Cpriority%7Cdish_ids&filter=status.eq~Received%7Ccreated_at.gte~2026-03-20' \
+-H 'Accept: application/json'
+```
 
 ### Response
 
-See previous example.
+If the request was successful, the server responds with a `200 OK` status code with the response body containing the list of new orders.
+
+```json expandable wrap
+{
+    "results": [
+        {
+            "id": "698b8810a91dc520146ecf40",
+            "table_number": 1,
+            "status": "Received",
+            "priority": 1,
+            "dish_ids": [
+                "698b8810a91dc520146ecef0",
+                "698b8810a91dc520146ecead",
+                "698b8810a91dc520146ececc",
+                "698b8810a91dc520146ece98",
+                "698b8810a91dc520146eceb2",
+                "698b8810a91dc520146ecf12"
+            ]
+        },
+        {
+            "id": "69bd9fcfd6cd65b962ab3ff6",
+            "table_number": 18,
+            "status": "Received",
+            "priority": 3,
+            "dish_ids": [
+                "698b8810a91dc520146ece94"
+            ]
+        },...
+    ],
+    "total_results": 10
+}
+```
+
+## 2. Prioritize the order
+
+The expeditor can adjust the priority of the order (from 1 to 5).
+
+### Request
+
+The client sends an HTTP request to update the priority of the order to `1` so that it takes precedence.
+
+```shellscript wrap
+curl -L -X PUT '{baseUrl}/orders/{orderId}' \
+-H 'Content-Type: application/json' \
+-H 'Accept: application/json' \
+-H 'Authorization: Bearer TOKEN_VALUE' \
+-d '{
+    "table_number": 18,
+    "status": "Received",
+    "priority": 1,
+    "dish_ids": [
+        "698b8810a91dc520146ece94"
+    ],
+    "special_requests": "No peanuts"
+}'
+```
+
+### Response
+
+If the request was successful, the server responds with a `200 OK` status code with the response body containing the updated order.
+
+```json
+{
+    "id": "69bd9fcfd6cd65b962ab3ff6",
+    "created_at": "2026-03-20T19:28:15.556Z",
+    "updated_at": "2026-03-20T20:13:35.998Z",
+    "scheduled_at": null,
+    "table_number": 18,
+    "status": "Received",
+    "priority": 1,
+    "dish_ids": [
+        "698b8810a91dc520146ece94"
+    ],
+    "special_requests": "No peanuts"
+}
+```
+
+## 3. Start preparation
+
+After prioritizing the order, the expeditor can start preparing the order and change its status to "In Progress".
+
+### Request
+
+The client sends an HTTP request to update the status of the order from `Received` to `In Progress`.
+
+```shellscript wrap
+curl -L -X PUT '{baseUrl}/orders/{orderId}' \
+-H 'Content-Type: application/json' \
+-H 'Accept: application/json' \
+-H 'Authorization: Bearer TOKEN_VALUE' \
+-d '{
+    "table_number": 18,
+    "status": "In Progress",
+    "priority": 1,
+    "dish_ids": [
+        "698b8810a91dc520146ece94"
+    ],
+    "special_requests": "No peanuts"
+}'
+```
+
+### Response
+
+If the request was successful, the server responds with a `200 OK` status code with the response body containing the updated order.
+
+```json
+{
+    "id": "69bd9fcfd6cd65b962ab3ff6",
+    "created_at": "2026-03-20T19:28:15.556Z",
+    "updated_at": "2026-03-20T20:17:32.306Z",
+    "scheduled_at": null,
+    "table_number": 18,
+    "status": "In Progress",
+    "priority": 1,
+    "dish_ids": [
+        "698b8810a91dc520146ece94"
+    ],
+    "special_requests": "No peanuts"
+}
+```
+
+## 4. Prepare order at each station
+
+Each dish in the order is assigned to a specific station (e.g., cold, hot, beverages). Stations responsible for each dish see their respective parts of the order on their KDS.
+
+### Request
+
+The client sends an HTTP request to retrieve only dishes belonging to a specific station ("cold" in this example).
+
+```shellscript wrap
+curl -L -X GET '{baseUrl}/orders/{orderId}/dishes?fields=name%7Cstation%7Cingredients&filter=station.eq~cold' \
+-H 'Accept: application/json'
+```
+
+### Response
+
+If the request was successful, the server responds with a `200 OK` status code with the response body containing the dishes included in the order that belong to the specified station. The client will store each dish ID in local storage for later use.
+
+```json
+{
+    "results": [
+        {
+            "id": "698b8810a91dc520146ece94",
+            "name": "Bruschetta al Pomodoro",
+            "ingredients": [
+                {
+                    "ingredient_id": "698b8810a91dc520146ece6c",
+                    "is_essential": false,
+                    "_id": "698b8810a91dc520146ece95"
+                },
+                {
+                    "ingredient_id": "698b8810a91dc520146ece70",
+                    "is_essential": true,
+                    "_id": "698b8810a91dc520146ece96"
+                },
+                {
+                    "ingredient_id": "698b8810a91dc520146ece88",
+                    "is_essential": false,
+                    "_id": "698b8810a91dc520146ece97"
+                }
+            ],
+            "station": "cold"
+        }
+    ],
+    "total_results": 1
+}
+```
+
+## 5. Display dish ingredients
+
+When the staff begins preparing dishes at their station, they need to know each dish's ingredients.
+
+### Request
+
+Using the previously saved dish IDs, the client sends an HTTP request to retrieve ingredients for each dish.
+
+```shellscript wrap
+curl -L -X GET '{baseUrl}/dishes/{dishId}/ingredients?fields=name' \
+-H 'Accept: application/json'
+```
+
+### Response
+
+If the request was successful, the server responds with a `200 OK` status code with the dish's ingredients.
+
+```json
+{
+    "results": [
+        {
+            "id": "698b8810a91dc520146ece6c",
+            "name": "Garlic"
+        },
+        {
+            "id": "698b8810a91dc520146ece70",
+            "name": "Cream"
+        },
+        {
+            "id": "698b8810a91dc520146ece88",
+            "name": "Bread Crumbs"
+        }
+    ],
+    "total_results": 3
+}
+```
+
+## 6. Mark order as "Ready for Assembly"
+
+After a station completes preparation of their part of the order, they mark it as "Ready for Assembly" on their KDS. Once all stations have marked their parts of the order as "Ready for Assembly", the expeditor is notified.
+
+## 7. Assemble order
+
+The expeditor assembles the parts of the order from the different stations. After the order is assembled, the expeditor updates the order status to "On the Way".
+
+<Note>
+  Note
+
+  For takeaway orders, the expeditor updates the order status to "Ready for Pickup" to indicate that the order is ready for the patron.
+</Note>
+
+### Request
+
+The client sends an HTTP request to update the status of the order from `In Progress` to `On the Way`.
+
+```shellscript wrap
+curl -L -X PUT '{baseUrl}/orders/{orderId}' \
+-H 'Content-Type: application/json' \
+-H 'Accept: application/json' \
+-H 'Authorization: Bearer TOKEN_VALUE' \
+-d '{
+    "table_number": 18,
+    "status": "On the Way",
+    "priority": 1,
+    "dish_ids": [
+        "698b8810a91dc520146ece94"
+    ],
+    "special_requests": "No peanuts"
+}'
+```
+
+### Response
+
+If the request was successful, the server responds with a `200 OK` status code with the response body containing the updated order.
+
+```json
+{
+    "id": "69bd9fcfd6cd65b962ab3ff6",
+    "created_at": "2026-03-20T19:28:15.556Z",
+    "updated_at": "2026-03-20T20:17:32.306Z",
+    "scheduled_at": null,
+    "table_number": 18,
+    "status": "On the Way",
+    "priority": 1,
+    "dish_ids": [
+        "698b8810a91dc520146ece94"
+    ],
+    "special_requests": "No peanuts"
+}
+```
