@@ -6,7 +6,7 @@ This API flow describes how a patron browses a restaurant menu and places an ord
 
 ## 1. Browse the menu
 
-The patron uses the food ordering app to browse the menu and view dishes belonging to specific categories (e.g., Appetizer, Main Course, Dessert, Drinks).
+The patron uses the food ordering app to browse the menu and view dishes belonging to specific categories, such as Appetizer, Main Course, Dessert, and Drinks.
 
 ### Request
 
@@ -104,7 +104,7 @@ If the request was successful, the server responds with a `200 OK` status code w
 
 ## 2. Check ingredient quantities
 
-Before displaying available dishes to the patron, the client app checks ingredient inventory. If a dish has essential ingredients whose inventory is zero, the dish will not be displayed as available for selection in the UI.
+Before displaying available dishes to the patron, the client app checks ingredient inventory. If a dish has essential ingredients whose quantity is zero, the dish will not be displayed as available for selection in the UI.
 
 ### Request
 
@@ -185,7 +185,7 @@ After the patron selects all dishes they want to order, they place their order.
 
 ### Request
 
-The client sends an HTTP request to create an order, retrieving the dishes that the patron selected from located storage and including them in the request body.
+The client sends an HTTP request to create an order, retrieving the dishes that the patron selected from local storage and including them in the request body.
 
 ```shellscript wrap
 curl -L -X POST '{baseUrl}/orders' \
@@ -199,7 +199,7 @@ curl -L -X POST '{baseUrl}/orders' \
     "698b8810a91dc520146ece94"
   ],
   "special_requests": "No peanuts",
-  "scheduled at": null
+  "scheduled_at": null
 }'
 ```
 
@@ -225,4 +225,4 @@ If the request was successful, the server responds with a `201 CREATED` status c
 
 ## 6. Receive order confirmation
 
-After the patron places an order, they receive confirmation and the order details are sent to the restaurant staff to begin preparing the order.
+After the patron places an order, they receive confirmation and the order details are sent to the restaurant staff to begin preparation.

@@ -1,0 +1,114 @@
+---
+title: "Authentication API Flow"
+---
+
+This API flow describes how to create a user account, authenticate using a username and password, and refresh an access token.
+
+## 1. Account creation
+
+The admin creates a user account and sets the user's username and password.
+
+### Request
+
+The client sends an HTTP request to create a user account.
+
+```shellscript wrap
+curl -L -X POST '{baseUrl}/users' \
+-H 'Content-Type: application/json' \
+-H 'Accept: application/json' \
+--data-raw '{
+  "email": "john.smith@gmail.com",
+  "password": "P@ssw0rd!",
+  "role": "manager",
+  "user_name": "john_smith"
+}'
+```
+
+### Response
+
+If the request was successful, the server responds with a `201 Created` status code with the response body containing the user's details.
+
+```json wrap
+{
+    "id": "69c197493fefea4aba5fcea4",
+    "created_at": "2026-03-23T19:40:57.853Z",
+    "updated_at": "2026-03-23T19:40:57.853Z",
+    "user_name": "john_smith",
+    "password": "P@ssw0rd!",
+    "email": "john.smith@gmail.com",
+    "role": "manager"
+}
+```
+
+## 2. Admin login
+
+The newly created admin logs into the admin application using their credentials to gain access to administrative functions.
+
+### Request
+
+The client sends an HTTP request to exchange the admin's username and password for an access token.
+
+```shellscript wrap
+curl -L -X POST '{baseUrl}/auth/token' \
+-H 'Content-Type: application/json' \
+-H 'Accept: application/json' \
+-H 'Authorization: Basic TOKEN_VALUE' \
+--data-raw '{
+  "user_name": "john_smith",
+  "password": "P@ssw0rd!",
+  "grant_type": "password"
+}'
+```
+
+### Response
+
+If the request was successful, the server responds with a `201 Created` status code with the response body containing the access token.
+
+```json wrap
+{
+    "created_at": "2026-03-23T19:48:03.710Z",
+    "updated_at": "2026-03-23T19:48:03.710Z",
+    "access_token": "af46d8c6-a0e1-47b8-b3e2-9256e7e4493e",
+    "expires_at": "2026-03-23T20:18:03.710Z",
+    "refresh_token": "72724604-73b1-4e35-8e00-3962129126da",
+    "token_type": "Bearer",
+    "user_name": "john_smith",
+    "_id": "69c198f33fefea4aba5fceaa",
+    "__v": 0
+}
+```
+
+## 3. Refresh the access token
+
+When the admin's access token expires, the client sends a request to refresh the token.
+
+### Request
+
+The client sends an HTTP request to refresh an admin's access token.
+
+```shellscript wrap
+curl -L -X POST '{baseUrl}/auth/refresh-token' \
+-H 'Content-Type: application/json' \
+-H 'Accept: application/json' \
+-d '{
+  "refresh_token": "27c92c18-ea65-48b2-b420-a07b6eaa2eab"
+}'
+```
+
+### Response
+
+If the request was successful, the server responds with a `201 Created` status code with the response body containing the access token.
+
+```json
+{
+    "_id": "69c198f33fefea4aba5fceaa",
+    "created_at": "2026-03-23T19:48:16.439Z",
+    "updated_at": "2026-03-23T19:48:16.440Z",
+    "access_token": "6f8412a2-c96a-4b64-851e-17ba57672ac5",
+    "expires_at": "2026-03-23T20:18:16.440Z",
+    "refresh_token": "a6c5e197-0850-48df-b9a3-a65c49f5da60",
+    "token_type": "Bearer",
+    "user_name": "john_smith",
+    "__v": 0
+}
+```

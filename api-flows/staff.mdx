@@ -6,7 +6,7 @@ This API flow describes how kitchen staff view, manage, and prepare an order pla
 
 ## 1. Display the order
 
-After the patron places an order, the order displays on the expeditor's KDS. The KDS should display only new orders.
+After the patron places an order, the order is displayed on the expeditor's KDS. The KDS should display only new orders.
 
 ### Request
 
@@ -98,7 +98,7 @@ If the request was successful, the server responds with a `200 OK` status code w
 
 ## 3. Start preparation
 
-After prioritizing the order, the expeditor starts preparing the order and changes its status to "In Progress".
+After prioritizing the order, the expeditor starts preparing the order and updates the order status to "In Progress".
 
 ### Request
 
@@ -146,7 +146,7 @@ Each dish in the order is assigned to a specific station (e.g., cold, hot, bever
 
 ### Request
 
-The client sends an HTTP request to retrieve dishes assigned to a specific station `cold` in this example).
+The client sends an HTTP request to retrieve dishes assigned to a specific station (`cold` in this example).
 
 ```shellscript wrap
 curl -L -X GET '{baseUrl}/orders/{orderId}/dishes?fields=name%7Cstation%7Cingredients&filter=station.eq~cold' \
@@ -156,12 +156,6 @@ curl -L -X GET '{baseUrl}/orders/{orderId}/dishes?fields=name%7Cstation%7Cingred
 ### Response
 
 If the request was successful, the server responds with a `200 OK` status code with the response body containing the dishes that belong to the specified station.
-
-<Note>
-  Note
-
-  The client stores each dish ID in local storage for use in the next step.
-</Note>
 
 ```json
 {
@@ -193,9 +187,15 @@ If the request was successful, the server responds with a `200 OK` status code w
 }
 ```
 
+<Note>
+  Note
+
+  The client stores each dish ID in local storage for use in the next step.
+</Note>
+
 ## 5. Display dish ingredients
 
-Before the staff begins preparing dishes at their station, they need to know each dish's ingredients.
+Before preparing dishes at their station, staff must view each dish's ingredients.
 
 ### Request
 
@@ -232,7 +232,13 @@ If the request was successful, the server responds with a `200 OK` status code w
 
 ## 6. Mark order as "Ready for Assembly"
 
-After a station finishes preparing their part of the order, they mark it as "Ready for Assembly" on their KDS. Once all stations have marked their parts of the order as "Ready for Assembly", the expeditor is notified.
+After a station finishes preparing its part of the order, they mark it as "Ready for Assembly" on their KDS. Once all stations have marked their parts of the order as "Ready for Assembly", the expeditor is notified.
+
+<Note>
+  Note
+
+  This process is managed within the client's logic rather than within the API.
+</Note>
 
 ## 7. Assemble order
 

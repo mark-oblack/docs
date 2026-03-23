@@ -1,0 +1,134 @@
+---
+title: "Admin API Flow"
+---
+
+This API flow describes how an admin gains access to administrative functions to create ingredients and dishes.
+
+## 1. Admin login
+
+The admin logs into the admin application using their credentials to gain access to administrative functions.
+
+### Request
+
+The client sends an HTTP request to exchange the admin's username and password for an access token.
+
+```shellscript wrap
+curl -L -X POST '{baseUrl}/auth/token' \
+-H 'Content-Type: application/json' \
+-H 'Accept: application/json' \
+-H 'Authorization: Basic TOKEN_VALUE' \
+--data-raw '{
+  "user_name": "john_smith",
+  "password": "P@ssw0rd!",
+  "grant_type": "password"
+}'
+```
+
+### Response
+
+If the request was successful, the server responds with a `201 Created` status code with the response body containing the access token.
+
+```json wrap
+{
+    "created_at": "2026-03-23T19:48:03.710Z",
+    "updated_at": "2026-03-23T19:48:03.710Z",
+    "access_token": "af46d8c6-a0e1-47b8-b3e2-9256e7e4493e",
+    "expires_at": "2026-03-23T20:18:03.710Z",
+    "refresh_token": "72724604-73b1-4e35-8e00-3962129126da",
+    "token_type": "Bearer",
+    "user_name": "john_smith",
+    "_id": "69c198f33fefea4aba5fceaa",
+    "__v": 0
+}
+```
+
+## 2. Create ingredients
+
+Admins are responsible for creating ingredients and specifying their quantities to track inventory levels accurately. This ensures there are sufficient ingredients available to fulfill patron orders.
+
+### Request
+
+The client sends an HTTP request to create a new ingredient and set its quantity.
+
+```shellscript wrap
+curl -L -X POST '{baseUrl}/ingredients' \
+-H 'Content-Type: application/json' \
+-H 'Accept: application/json' \
+-H 'Authorization: Bearer TOKEN_VALUE' \
+-d '{
+  "name": "Carrot",
+  "in_stock_qty": 3,
+  "price": 999
+}'
+```
+
+### Response
+
+If the request was successful, the server responds with a `201 Created` status code with the response body containing the full resource.
+
+```json
+{
+    "id": "69c194c43fefea4aba5fce9a",
+    "created_at": "2026-03-23T19:30:12.349Z",
+    "updated_at": "2026-03-23T19:30:12.349Z",
+    "name": "Carrot",
+    "in_stock_qty": 3,
+    "price": 999
+}
+```
+
+## 3. Create dishes
+
+Admins create dishes by specifying their details and associating them with the necessary ingredients.
+
+### Request
+
+The client sends an HTTP request to create a dish with the specified ingredients.
+
+```shellscript wrap
+curl -L -X POST '{baseUrl}/dishes' \
+-H 'Content-Type: application/json' \
+-H 'Accept: application/json' \
+-H 'Authorization: Bearer TOKEN_VALUE' \
+-d '{
+  "name": "Ratatouille",
+  "description": "A traditional French vegetable stew from Provence made with eggplant, zucchini, bell peppers, tomatoes, onions, and garlic, all simmered together with olive oil and herbs like thyme and basil.",
+  "category": "Main Course",
+  "image_name": "ratatouille",
+  "ingredients": [
+    {
+      "ingredient_id": "69c194c43fefea4aba5fce9a",
+      "is_essential": true
+    }
+  ],
+  "preparation_time": 45,
+  "price": 999,
+  "station": "hot"
+}'
+```
+
+### Response
+
+If the request was successful, the server responds with a `201 Created` status code with the response body containing the dish's details.
+
+```json
+{
+    "id": "69c1952e3fefea4aba5fce9f",
+    "created_at": "2026-03-23T19:31:58.651Z",
+    "updated_at": "2026-03-23T19:31:58.651Z",
+    "name": "Ratatouille",
+    "description": "A traditional French vegetable stew from Provence made with eggplant, zucchini, bell peppers, tomatoes, onions, and garlic, all simmered together with olive oil and herbs like thyme and basil.",
+    "category": "Main Course",
+    "price": 999,
+    "preparation_time": 45,
+    "image_name": "ratatouille",
+    "ingredients": [
+        {
+            "ingredient_id": "69c194c43fefea4aba5fce9a",
+            "is_essential": true,
+            "_id": "69c1952e3fefea4aba5fcea0"
+        }
+    ],
+    "station": "hot"
+}
+```
