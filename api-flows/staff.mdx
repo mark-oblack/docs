@@ -64,7 +64,7 @@ The client sends an HTTP request to update the priority of the order to `1` so t
 curl -L -X PUT '{baseUrl}/orders/{orderId}' \
 -H 'Content-Type: application/json' \
 -H 'Accept: application/json' \
--H 'Authorization: Bearer TOKEN_VALUE' \
+-H 'Authorization: Bearer {accessTokenValue}' \
 -d '{
     "table_number": 18,
     "status": "Received",
@@ -108,7 +108,7 @@ The client sends an HTTP request to update the status of the order from `Receive
 curl -L -X PUT '{baseUrl}/orders/{orderId}' \
 -H 'Content-Type: application/json' \
 -H 'Accept: application/json' \
--H 'Authorization: Bearer TOKEN_VALUE' \
+-H 'Authorization: Bearer {accessTokenValue}' \
 -d '{
     "table_number": 18,
     "status": "In Progress",
@@ -258,7 +258,7 @@ The client sends an HTTP request to update the status of the order from `In Prog
 curl -L -X PUT '{baseUrl}/orders/{orderId}' \
 -H 'Content-Type: application/json' \
 -H 'Accept: application/json' \
--H 'Authorization: Bearer TOKEN_VALUE' \
+-H 'Authorization: Bearer {accessTokenValue}' \
 -d '{
     "table_number": 18,
     "status": "On the Way",

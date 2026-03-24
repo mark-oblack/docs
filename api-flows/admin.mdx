@@ -16,7 +16,7 @@ The client sends an HTTP request to exchange the admin's username and password f
 curl -L -X POST '{baseUrl}/auth/token' \
 -H 'Content-Type: application/json' \
 -H 'Accept: application/json' \
--H 'Authorization: Basic TOKEN_VALUE' \
+-H 'Authorization: Basic {credentials}' \
 --data-raw '{
   "user_name": "john_smith",
   "password": "P@ssw0rd!",
@@ -32,9 +32,9 @@ If the request was successful, the server responds with a `201 Created` status c
 {
     "created_at": "2026-03-23T19:48:03.710Z",
     "updated_at": "2026-03-23T19:48:03.710Z",
-    "access_token": "af46d8c6-a0e1-47b8-b3e2-9256e7e4493e",
+    "access_token": "{accessTokenValue}",
     "expires_at": "2026-03-23T20:18:03.710Z",
-    "refresh_token": "72724604-73b1-4e35-8e00-3962129126da",
+    "refresh_token": "{refreshTokenValue}",
     "token_type": "Bearer",
     "user_name": "john_smith",
     "_id": "69c198f33fefea4aba5fceaa",
@@ -54,7 +54,7 @@ The client sends an HTTP request to create a new ingredient and set its quantity
 curl -L -X POST '{baseUrl}/ingredients' \
 -H 'Content-Type: application/json' \
 -H 'Accept: application/json' \
--H 'Authorization: Bearer TOKEN_VALUE' \
+-H 'Authorization: Bearer {accessTokenValue}' \
 -d '{
   "name": "Carrot",
   "in_stock_qty": 3,
@@ -89,7 +89,7 @@ The client sends an HTTP request to create a dish with the specified ingredients
 curl -L -X POST '{baseUrl}/dishes' \
 -H 'Content-Type: application/json' \
 -H 'Accept: application/json' \
--H 'Authorization: Bearer TOKEN_VALUE' \
+-H 'Authorization: Bearer {accessTokenValue}' \
 -d '{
   "name": "Ratatouille",
   "description": "A traditional French vegetable stew from Provence made with eggplant, zucchini, bell peppers, tomatoes, onions, and garlic, all simmered together with olive oil and herbs like thyme and basil.",

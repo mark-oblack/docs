@@ -191,7 +191,7 @@ The client sends an HTTP request to create an order, retrieving the dishes that 
 curl -L -X POST '{baseUrl}/orders' \
 -H 'Content-Type: application/json' \
 -H 'Accept: application/json' \
--H 'Authorization: Bearer TOKEN_VALUE' \
+-H 'Authorization: Bearer {accessTokenValue}' \
 -d '{
   "name": "Benjamin",
   "table_number": 18,
@@ -205,7 +205,7 @@ curl -L -X POST '{baseUrl}/orders' \
 
 ### Response
 
-If the request was successful, the server responds with a `201 CREATED` status code with the response body containing details about the order.
+If the request was successful, the server responds with a `201 Created` status code with the response body containing details about the order.
 
 ```json
 {
